@@ -158,3 +158,97 @@ int GetInformation(ThongTin *&SV, int &Tong_SV, string *&SinhVien, string *&Sinh
 
 	return 1;
 }
+//Hàm tải thông tin
+//Input: Thông tin sinh viên được chứa trong các struct
+//Output: Thông tin trong struct ban đầu được đưa lên file html
+void TaiThongTin(ThongTin *&SV, string HTML, int index, int *ThuocTinh)
+{
+	//Mo file
+	string FileName;
+	FileName = "Profiles/" + SV[index].MSSV + ".html";
+	ofstream f1(FileName);
+
+	//Dua thong tin len file
+	//Name
+	int in = 0;
+	char *temp;
+	do
+	{
+		temp = (char*)SV[index].Ten.c_str();
+		in = HTML.find("$name", in + 1, 5);
+		if (in != std::string::npos)
+		{
+			HTML.replace(in, 5, temp);
+		}
+	} while (in != std::string::npos);
+
+	//MSSV
+	in = 0;
+	do
+	{
+		temp = (char*)SV[index].MSSV.c_str();
+		in = HTML.find("$id", in + 1, 3);
+		if (in != std::string::npos)
+		{
+			HTML.replace(in, 3, temp);
+		}
+	} while (in != std::string::npos);
+
+	//Khoa
+	in = 0;
+	do
+	{
+		temp = (char*)SV[index].Khoa.c_str();
+		in = HTML.find("$faculty", in + 1, 8);
+		if (in != std::string::npos)
+		{
+			HTML.replace(in, 8, temp);
+		}
+	} while (in != std::string::npos);
+
+	//Ngay sinh
+	in = 0;
+	temp = (char*)SV[index].NgaySinh.c_str();
+	in = HTML.find("$birthday");
+	HTML.replace(in, 9, temp);
+
+	//Mo ta
+	in = 0;
+	temp = (char*)SV[index].MoTa.c_str();
+	in = HTML.find("$info");
+	HTML.replace(in, 5, temp);
+
+	//Hinh anh
+	in = 0;
+	temp = (char*)SV[index].HinhAnh.c_str();
+	in = HTML.find("$avatar");
+	HTML.replace(in, 7, temp);
+
+	//Email
+	in = 0;
+	temp = (char*)SV[index].Email.c_str();
+	in = HTML.find("$email");
+	HTML.replace(in, 11, temp);
+
+	//Email
+	in = 0;
+	temp = (char*)SV[index].Email.c_str();
+	in = HTML.find("$email");
+	HTML.replace(in, 11, temp);
+
+	//So thich
+	in = 0;
+	int ThuocTinhSoThich = ThuocTinh[index] - 7;
+	in = HTML.find("$hobbies");
+	string Hobbies = "";
+	for (int k = 0; k < ThuocTinhSoThich; k++)
+	{
+		Hobbies += "<li>" + SV[index].SoThich[k] + "</li>" + "\n";
+	}
+	temp = (char*)Hobbies.c_str();
+	HTML.replace(in, 8, temp);
+
+	//Dua du lieu vao html
+	f1 << HTML;
+	f1.close();
+}
