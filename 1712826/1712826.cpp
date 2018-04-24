@@ -112,3 +112,49 @@ void TachThongTin(string SinhVien, ThongTin SV[], int index, string *&SinhVien_C
 		SV[index].SoThich[i] = SinhVien_CT[i + 7];
 	}
 }
+//Hàm get information
+//Output: (Thông tin của các sinh viên)
+//1. Số sinh viên hợp lệ
+//0. Số sinh viên không hợp lệ
+int GetInformation(ThongTin *&SV, int &Tong_SV, string *&SinhVien, string *&SinhVien_CT, int *&ThuocTinh, int &SV_index)
+{
+	//Nhập tổng số sinh viên
+	cout << "Nhap tong so sinh vien: ";
+	cin >> Tong_SV;
+	cout << endl;
+	while (Tong_SV <= 0)
+	{
+		cout << "So sinh vien khong hop le, moi nhap lai: ";
+		cin >> Tong_SV;
+	}
+
+	//Kiểm tra tổng sinh viên có hợp lệ không
+	int Test = KiemTraTongSoSinhVien(Tong_SV);
+	if (Test == 0)
+	{
+		return 0;
+	}
+
+	//Cấp phát bộ nhớ cho các con trỏ
+	SV = new ThongTin[Tong_SV];
+	SinhVien = new string[Tong_SV];
+	SV_index = 0;
+	ThuocTinh = new int[Tong_SV];
+
+	//Lấy thông tin từ file csv
+	//Mở file csv và đọc file csv
+	ifstream Filecsv("SinhVien.csv");
+	if (!Filecsv)
+	{
+		perror("Mo file that bai.\n");
+	}
+	//Lấy thông tin và đưa vào chuỗi thông tin các sinh viên
+	for (int i = 0; i < Tong_SV; i++)
+	{
+		getline(Filecsv, SinhVien[i]);
+		//Tách từ chuỗi tổng đưa vào các thuộc tính các sinh viên
+		TachThongTin(SinhVien[i], SV, i, SinhVien_CT, SV_index, ThuocTinh);
+	}
+
+	return 1;
+}
